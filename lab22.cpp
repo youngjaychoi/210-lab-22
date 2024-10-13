@@ -1,4 +1,6 @@
 #include <iostream>
+#include <cstdlib>
+#include <ctime>
 using namespace std;
 
 const int MIN_NR = 10, MAX_NR = 99, MIN_LS = 5, MAX_LS = 20;
@@ -45,38 +47,79 @@ public:
         }
     }
 
-    void insert_after(int value, int position) {
-        if (position < 0) {
-            cout << "Position must be >= 0." << endl;
-            return;
-        }
-
-        Node* newNode = new Node(value);
-        if (!head) {
-            head = tail = newNode;
-            return;
-        }
+    void delete_pos(int position) {
+        if (!head) return;
 
         Node* temp = head;
         for (int i = 0; i < position && temp; ++i)
             temp = temp->next;
-
+        
         if (!temp) {
             cout << "Position exceeds list size. Node not inserted.\n";
-            delete newNode;
             return;
         }
 
-        newNode->next = temp->next;
-        newNode->prev = temp;
-        if (temp->next)
-            temp->next->prev = newNode;
-        else
-            tail = newNode; // Inserting at the end
-        temp->next = newNode;
+
     }
 
-    void delete_node(int value) {
+    void pop_front() {
+        if (!head) return;
+
+        Node* temp = head;
+        head = head->next;
+        
+        if (head)
+            head->prev = nullptr;
+        else
+            tail = nullptr;
+        delete temp;
+    }
+
+    void pop_back() {
+        if (!tail) return;
+
+        Node* temp = tail;
+        tail = tail->prev;
+
+        if (tail)
+            tail->next = nullptr;
+        else
+            head = nullptr;
+        delete temp;
+    }
+
+    // void insert_after(int value, int position) {
+    //     if (position < 0) {
+    //         cout << "Position must be >= 0." << endl;
+    //         return;
+    //     }
+
+    //     Node* newNode = new Node(value);
+    //     if (!head) {
+    //         head = tail = newNode;
+    //         return;
+    //     }
+
+    //     Node* temp = head;
+    //     for (int i = 0; i < position && temp; ++i)
+    //         temp = temp->next;
+
+    //     if (!temp) {
+    //         cout << "Position exceeds list size. Node not inserted.\n";
+    //         delete newNode;
+    //         return;
+    //     }
+
+    //     newNode->next = temp->next;
+    //     newNode->prev = temp;
+    //     if (temp->next)
+    //         temp->next->prev = newNode;
+    //     else
+    //         tail = newNode; // Inserting at the end
+    //     temp->next = newNode;
+    // }
+
+    void delete_val(int value) {
         if (!head) return; // Empty list
 
         Node* temp = head;
@@ -131,11 +174,14 @@ public:
 
 // Driver program
 int main() {
+    srand(time(0));
+
     DoublyLinkedList list;
     int size = rand() % (MAX_LS-MIN_LS+1) + MIN_LS;
 
     for (int i = 0; i < size; ++i)
         list.push_back(rand() % (MAX_NR-MIN_NR+1) + MIN_NR);
+
     cout << "List forward: ";
     list.print();
 
@@ -144,6 +190,7 @@ int main() {
 
     cout << "Deleting list, then trying to print.\n";
     list.~DoublyLinkedList();
+    
     cout << "List forward: ";
     list.print();
 
