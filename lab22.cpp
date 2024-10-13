@@ -59,7 +59,16 @@ public:
             return;
         }
 
-
+        if (temp == head) {
+            pop_front();
+        } else if (temp == tail) {
+            pop_back();
+        } else {
+            temp->prev->next = temp->next;
+            if (temp->next)
+                temp->next->prev = temp->prev;
+            delete temp;
+        }
     }
 
     void pop_front() {
@@ -128,11 +137,7 @@ public:
 
         if (!temp) return; // Value not found
 
-        if (temp->prev) {
-            temp->prev->next = temp->next;
-        } else {
-            head = temp->next; // Deleting the head
-        }
+       
 
         if (temp->next) {
             temp->next->prev = temp->prev;
@@ -188,10 +193,20 @@ int main() {
     cout << "List backward: ";
     list.print_reverse();
 
-    cout << "Deleting list, then trying to print.\n";
-    list.~DoublyLinkedList();
-    
-    cout << "List forward: ";
+    list.delete_pos(0);
+    cout << "Delete by position: ";
+    list.print();
+
+    list.pop_front();
+    cout << "Pop front: ";
+    list.print();
+
+    list.pop_back();
+    cout << "Pop back: ";
+    list.print();
+
+    list.delete_val(15);
+    cout << "Delete value: ";
     list.print();
 
     return 0;
